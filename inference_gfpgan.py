@@ -5,6 +5,12 @@ import numpy as np
 import os
 import torch
 from basicsr.utils import imwrite
+import logging
+
+
+
+logging.basicConfig(level=logging.INFO, format=f'%(asctime)s %(threadName)s %(levelname)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+logger = logging.getLogger(__name__)
 
 from common.shared.GFPGAN.gfpgan import GFPGANer
 
@@ -104,7 +110,7 @@ def run_main(_input: str, _output: str) -> str:
 	for img_path in img_list:
 		# read image
 		img_name = os.path.basename(img_path)
-		print(f'Processing {img_name} ...')
+		logger.debug(f'Processing {img_name} ...')
 		basename, ext = os.path.splitext(img_name)
 		input_img = cv2.imread(img_path, cv2.IMREAD_COLOR)
 
@@ -146,5 +152,5 @@ def run_main(_input: str, _output: str) -> str:
 				save_restore_path = os.path.join(args['output'], 'restored_imgs', f'{basename}.{extension}')
 			imwrite(restored_img, save_restore_path)
 
-	print(f'Results are in the [{args["output"]}] folder.')
+	logger.debug(f'Results are in the [{args["output"]}] folder.')
 	return args['output'] + '/restored_imgs/' + img_name
